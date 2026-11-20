@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="ru">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CRM Aromika · Выбор темы</title>
+<style>
+:root{font:16px/1.5 system-ui,sans-serif;color:#19243b;background:#eff2f8;--muted:#52627c;--line:#dce3ef;--accent:#933459;--pale:#fff1f6}*{box-sizing:border-box}body{margin:0}button,input,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #b3517c;outline-offset:3px}header{padding:16px clamp(20px,6vw,85px);background:white;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-weight:800}.badge{font-size:.82rem;color:var(--accent);background:var(--pale);border-radius:20px;padding:4px 11px;white-space:nowrap}main{max-width:790px;margin:clamp(24px,7vw,85px) auto;padding:0 16px}h1,h2,p{margin:0}h1{font-size:clamp(1.55rem,4.6vw,2.4rem);line-height:1.1;margin:8px 0 10px}.muted{color:var(--muted)}section.form{background:#fff;padding:clamp(16px,4vw,30px);border:1px solid var(--line);border-radius:20px;margin-top:24px;box-shadow:0 10px 30px #19243b0b}.label{display:block;font-weight:700;margin:0 0 7px}.field{display:flex;justify-content:space-between;align-items:center;gap:14px;color:#19243b;text-align:left;width:100%;padding:12px 14px;background:#fafbfe;border:1px solid #cad4e5;border-radius:10px;min-height:48px}.field:hover{border-color:var(--accent)}.crumb{color:var(--muted);font-size:.88rem;margin-top:8px}.fieldBlock{margin-top:22px}.fieldBlock textarea{display:block;resize:vertical;width:100%;min-height:95px;border:1px solid #cad4e5;border-radius:10px;padding:10px;color:#19243b;background:white}.demoNote{margin-top:16px;font-size:.9rem;color:var(--muted)}
+dialog{width:min(calc(100% - 28px),760px);max-height:calc(100% - 28px);max-height:calc(100dvh - 28px);overflow:auto;border:1px solid var(--line);border-radius:20px;padding:0;background:white;color:inherit;box-shadow:0 20px 64px #19243b40}dialog::backdrop{background:#14213d66}.dialogInner{padding:clamp(14px,4vw,26px)}.bar{display:flex;align-items:center;justify-content:space-between;gap:10px}.bar h2{font-size:clamp(1.2rem,4vw,1.65rem);line-height:1.2}.close{flex:0 0 44px;height:44px;background:#edf1f8;border:0;border-radius:11px;font-size:1.4rem;color:#43536b}.back{min-height:44px;border:0;background:none;color:var(--accent);font-weight:700;padding:0 4px;margin-top:4px}.search{margin:14px 0;display:block;width:100%;min-height:46px;padding:9px 12px;border:1px solid #cad4e5;border-radius:10px;background:#f8f9fc}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.tile{position:relative;display:block;text-align:left;min-height:74px;padding:13px 27px 13px 13px;border-radius:13px;border:1px solid var(--line);background:#f8fafd;color:#19243b;overflow-wrap:anywhere}.tile:hover{border-color:#bd6285;background:var(--pale)}.tile strong,.tile small{display:block}.tile strong{font-size:.98rem;line-height:1.27}.tile small{font-size:.86rem;line-height:1.38;color:var(--muted);margin-top:6px}.tile .arrow{position:absolute;right:10px;top:13px;color:var(--accent)}.tile.hot{border-color:#c58aa1;background:var(--pale)}.help{font-size:.88rem;color:var(--muted);margin:10px 0 0}.notice{margin-top:15px;border-radius:10px;background:#edf1f8;padding:11px 13px;color:#445572;font-size:.88rem}[hidden]{display:none!important}@media(max-width:360px){.tile{padding-left:9px;padding-right:19px}.tile .arrow{right:6px}.tile strong{font-size:.91rem}}
+</style></head>
+<body><header><div class="brand">Aromika <span class="muted">CRM</span></div><span class="badge">Тестовая страница</span></header>
+<main><p class="muted">Документы / Служебные записки</p><h1>Новая служебная записка</h1>
+<section class="form"><label class="label" for="pick">Тема</label><button class="field" id="pick" type="button" aria-haspopup="dialog"><span id="picked">Выбрать тему</span><span aria-hidden="true">⌄</span></button><p class="crumb" id="route" aria-live="polite" hidden></p>
+<div class="fieldBlock"><label class="label" for="subject">Заголовок записки</label><textarea id="subject"></textarea></div></section></main>
+<dialog id="modal" aria-labelledby="heading"><div class="dialogInner"><div class="bar"><h2 id="heading" tabindex="-1">Выберите группу</h2><button class="close" id="close" type="button" aria-label="Закрыть">×</button></div><button class="back" id="back" type="button" hidden>← Назад</button><input id="search" class="search" type="search" placeholder="Поиск по всем темам" aria-label="Поиск по всем темам"><div class="grid" id="tiles"></div></div></dialog>
+<script>
+const groups=[
+ {
+  "name": "Акции, скидки и маркетинговые активности",
+  "d": "Для супермаркетов, розницы, опта и регионов",
+  "hot": true,
+  "children": [
+   {
+    "name": "Супермаркеты",
+    "d": "Мероприятия в магазинах и скидки для сетей",
+    "hot": true,
+    "children": [
+     {
+      "name": "Скидки для супермаркетов",
+      "d": "Разовые и акционные скидки для торговых сетей.",
+      "terms": "супермаркет сети скидка"
+     },
+     {
+      "name": "Промо и мероприятия",
+      "d": "Дегустации, промостойки и промоутеры в торговом зале.",
+      "terms": "дегустация маркетинг мероприятия промо супермаркет"
+     },
+     {
+      "name": "Утверждение цены для сетей",
+      "d": "Новая цена для торговой сети.",
+      "terms": ""
+     },
+     {
+      "name": "Выкуп ДМП",
+      "d": "Дополнительные места продаж в супермаркетах.",
+      "terms": "выкуп дмп дополнительное место продаж выкладка"
+     }
+    ]
+   },
+   {
+    "name": "Розница, опт и регионы",
+    "d": "Товарные акции, скидки, бонусы и полки",
+    "hot": false,
+    "children": [
+     {
+      "name": "Плюсовые акции",
+      "d": "Товар в подарок при покупке, например 1+1.",
+      "terms": "плюсовая акция подарок 1 + 1"
+     },
+     {
+      "name": "Разовая дополнительная скидка",
+      "d": "Скидка для розницы, опта или региона.",
+      "terms": "акция процент"
+     },
+     {
+      "name": "Бонусы",
+      "d": "",
+      "terms": ""
+     },
+     {
+      "name": "Выплаты ТТ за полки",
+      "d": "Оплата полочного места в розничных точках.",
+      "terms": ""
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "name": "Отдел маркетинга",
+  "d": "Акции и упаковка для Kaspi",
+  "hot": false,
+  "children": [
+   {
+    "name": "Акции Kaspi",
+    "d": "Согласование акций на маркетплейсе.",
+    "terms": "каспи маркетплейс продвижение"
+   },
+   {
+    "name": "Упаковка для Kaspi",
+    "d": "Согласование закупки упаковки для заказов.",
+    "terms": "каспи маркетплейс закупка упаковки"
+   }
+  ]
+ },
+ {
+  "name": "Клиенты и договоры",
+  "d": "",
+  "hot": false,
+  "children": [
+   {
+    "name": "Дополнительные условия сотрудничества",
+    "d": "",
+    "terms": ""
+   },
+   {
+    "name": "Сотрудничество с Россией",
+    "d": "",
+    "terms": ""
+   },
+   {
+    "name": "Продление договора",
+    "d": "",
+    "terms": ""
+   },
+   {
+    "name": "Создание карточки клиента",
+    "d": "",
+    "terms": ""
+   }
+  ]
+ },
+ {
+  "name": "Образцы и рекламные материалы",
+  "d": "",
+  "hot": false,
+  "children": [
+   {
+    "name": "Образцы товара",
+    "d": "",
+    "terms": ""
+   },
+   {
+    "name": "Тестеры косметики Topface",
+    "d": "",
+    "terms": ""
+   },
+   {
+    "name": "Баннеры, вывески и брендирование",
+    "d": "",
+    "terms": ""
+   }
+  ]
+ },
+ {
+  "name": "Склад и товар",
+  "d": "",
+  "hot": false,
+  "children": [
+   {
+    "name": "Отгрузка и перемещение",
+    "d": "",
+    "terms": ""
+   },
+   {
+    "name": "Списание брака",
+    "d": "",
+    "terms": ""
+   },
+   {
+    "name": "Уценка товара",
+    "d": "",
+    "terms": ""
+   },
+   {
+    "name": "Списание товара для нужд офиса",
+    "d": "",
+    "terms": ""
+   },
+   {
+    "name": "Перемещение образцов для дистрибьюторов в РФ",
+    "d": "",
+    "terms": ""
+   }
+  ]
+ },
+ {
+  "name": "Производство и снабжение",
+  "d": "",
+  "hot": false,
+  "children": [
+   {
+    "name": "Упаковка и комплектующие",
+    "d": "",
+    "terms": ""
+   },
+   {
+    "name": "Потребность в сырье",
+    "d": "",
+    "terms": ""
+   },
+   {
+    "name": "Производство товара в Кольчугино",
+    "d": "",
+    "terms": ""
+   }
+  ]
+ },
+ {
+  "name": "Оплата и расходы",
+  "d": "",
+  "hot": false,
+  "children": [
+   {
+    "name": "Выделение ДС — Казахстан",
+    "d": "",
+    "terms": ""
+   },
+   {
+    "name": "Выделение ДС — РФ",
+    "d": "",
+    "terms": ""
+   },
+   {
+    "name": "Выделение ДС Кольчугино",
+    "d": "",
+    "terms": ""
+   },
+   {
+    "name": "Оплата оборудования",
+    "d": "",
+    "terms": ""
+   },
+   {
+    "name": "ГСМ — Казахстан",
+    "d": "",
+    "terms": ""
+   },
+   {
+    "name": "ГСМ — РФ",
+    "d": "",
+    "terms": ""
+   }
+  ]
+ },
+ {
+  "name": "Бухгалтерия и контроль",
+  "d": "",
+  "hot": false,
+  "children": [
+   {
+    "name": "Удаление накладных",
+    "d": "",
+    "terms": ""
+   },
+   {
+    "name": "Корректировка накладных",
+    "d": "",
+    "terms": ""
+   },
+   {
+    "name": "ПДЗ — Казахстан",
+    "d": "",
+    "terms": "просроченная дебиторская задолженность"
+   },
+   {
+    "name": "ПДЗ — Россия",
+    "d": "",
+    "terms": "просроченная дебиторская задолженность"
+   },
+   {
+    "name": "Ревизия",
+    "d": "",
+    "terms": ""
+   }
+  ]
+ },
+ {
+  "name": "Сотрудники",
+  "d": "",
+  "hot": false,
+  "children": [
+   {
+    "name": "Подбор сотрудника в штат",
+    "d": "",
+    "terms": ""
+   },
+   {
+    "name": "Материальная и финансовая помощь",
+    "d": "",
+    "terms": ""
+   },
+   {
+    "name": "Мотивация ТП",
+    "d": "Для торговых представителей всех регионов.",
+    "terms": "торговые представители"
+   }
+  ]
+ }
+];
+const flatten=(items,path=[])=>items.flatMap(item=>item.children?flatten(item.children,[...path,item.name]):[{...item,path}]);
+const all=flatten(groups);
+const $=id=>document.getElementById(id);
+let stack=[],selected=null;
+const modal=$('modal'),search=$('search'),tiles=$('tiles'),heading=$('heading'),back=$('back');
+const el=(tag,text,cls)=>{const e=document.createElement(tag);if(text)e.textContent=text;if(cls)e.className=cls;return e};
+const norm=s=>s.toLowerCase().replace(/ё/g,'е').trim();
+function pick(item,path){selected={...item,path};$('picked').textContent=item.name;$('route').hidden=false;$('route').textContent=[...path,item.name].join(' → ');modal.close();}
+function render(){
+ const current=stack.at(-1), q=norm(search.value), path=stack.map(i=>i.name);
+ const entries=q?all.filter(i=>q.split(/\s+/).every(x=>norm([i.name,i.d,i.terms,...i.path].join(' ')).includes(x))):current?current.children:groups;
+ heading.textContent=q?'Результаты поиска':current?current.name:'Выберите группу';
+ back.hidden=!stack.length&&!q;
+ back.textContent=q?'← Очистить поиск':stack.length===1?'← Все группы':'← '+stack.at(-2)?.name;
+ tiles.replaceChildren();
+ if(!entries.length)tiles.append(el('p','Нет тем по этому запросу.','help'));
+ for(const item of entries){
+  const button=el('button',null,'tile'+(item.hot?' hot':''));button.type='button';
+  button.append(el('strong',item.name));
+  const sub=q?[item.path.at(-1),item.d].filter(Boolean).join(' · '):current?item.d:'';
+  if(sub)button.append(el('small',sub));
+  const arrow=el('span',item.children?'›':'↵','arrow');arrow.setAttribute('aria-hidden','true');button.append(arrow);
+  button.onclick=()=>{if(item.children){stack.push(item);search.value='';render();heading.focus();}else pick(item,item.path||path)};
+  tiles.append(button);
+ }
+}
+$('pick').onclick=()=>{stack=[];search.value='';render();modal.showModal();heading.focus()};
+$('close').onclick=()=>modal.close();
+modal.addEventListener('close',()=>$('pick').focus());
+back.onclick=()=>{if(search.value)search.value='';else stack.pop();render();heading.focus()};
+search.addEventListener('input',render);
+</script></body></html>
