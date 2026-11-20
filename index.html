@@ -283,6 +283,16 @@ const groups=[
     "terms": "торговые представители"
    }
   ]
+ },
+ {
+  "name": "Другие темы",
+  "children": [
+   {
+    "name": "Другая тема",
+    "d": "Выбор согласующих вручную.",
+    "terms": "неподходящая свободная другая тема выбор согласующих индивидуальное самостоятельный маршрут"
+   }
+  ]
  }
 ];
 const flatten=(items,path=[])=>items.flatMap(item=>item.children?flatten(item.children,[...path,item.name]):[{...item,path}]);
